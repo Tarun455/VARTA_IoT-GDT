@@ -7,8 +7,8 @@ A comprehensive soil monitoring solution built with the Frugal-IoT framework for
 - **Soil Moisture Monitoring**: Analog sensor with configurable range (0-100%)
 - **Environmental Sensing**: SHT30 or SHT40 temperature and humidity sensor via I2C
 - **Soil Temperature**: DS18B20 waterproof temperature sensor
+- **Battery Monitoring**: Voltage divider circuit for battery voltage measurement
 - **Wireless Connectivity**: WiFi with MQTT publishing
-- **Control System**: Hysteresis-based control with LED feedback
 - **Multi-Board Support**: Compatible with various ESP32/ESP8266 development boards
 - **Power Management**: Configurable sleep modes for battery operation
 - **LoRa Mesh**: Optional LoRaMesher support on compatible boards
@@ -20,6 +20,10 @@ A comprehensive soil monitoring solution built with the Frugal-IoT framework for
 - Capacitive Soil moisture sensor
 - SHT30 or SHT40 temperature/humidity sensor
 - DS18B20 waterproof temperature sensor
+- Voltage divider circuit (2x 100kΩ resistors for 1:2 ratio battery monitoring)
+
+### Voltage Divider Circuit
+The battery voltage is measured using a simple voltage divider with two 100kΩ resistors in series. This creates a 1:2 voltage ratio, meaning 4.0V at the battery terminal is seen as 2.0V at the ESP ADC pin, keeping it within the safe 0-3.3V range.
 
 ### Supported Boards
 
@@ -40,7 +44,8 @@ These pins are specific to the Node MCU board
 |-----------|-----|
 | Soil Moisture | GPIO 32 |
 | DS18B20 | GPIO 5 | 
-| SHT30 |I2C (SDA → GPIO 21,SCL → GPIO 22)| 
+| SHT40 | I2C (SDA → GPIO 21, SCL → GPIO 22) |
+| Battery Voltage (Voltage Divider) | GPIO 35 (via 2x 100kΩ divider) |
 
 ## Build & Installation Guide
 
@@ -117,8 +122,7 @@ Adjust soil moisture sensor calibration in `main.cpp`:
 // Parameters: id, name, pin, dry_value, scale_factor, color, retain
 frugal_iot.sensors->add(new Sensor_Soil("soil", "Soil", 3, 4095, -100.0/4095, "brown", true));
 ```
-This can also be calibrated in the captive portal. Place the soil moisture sensor in completely dry soil and set it as 0%, then adjust pout in water till the soil can absorb no more and set it to 100%. 
-
+This can also be calibrated in the captive portal. Place the soil moisture sensor in completely dry soil and set it as 0%, then adjust pout in water till the soil can absorb no more and set it to 100%.  
 It is important to do it set the 0% value first, and it has to be 0% (as this is treated differently for calibration). 
 
 ### Power Management
@@ -159,6 +163,7 @@ The system publishes sensor data via MQTT with the following topics structure:
 - Ambient temperature (°C)
 - Ambient humidity (%)
 - Soil temperature (°C)
+- Battery voltage (V)
 
 ## Control Features
 
@@ -176,12 +181,6 @@ Enable debugging by uncommenting flags in `platformio.ini`:
 -D SENSOR_SOIL_DEBUG
 ```
 
-### Custom Sensors
-The project includes a custom DS18B20 sensor implementation in:
-- `src/sensor_ds18b20.h`
-- `src/sensor_ds18b20.cpp`
-
-This is likely to be removed at some point in the future when that sensor is supported by Frugal-IoT
 
 ## Troubleshooting
 
@@ -195,8 +194,7 @@ This is likely to be removed at some point in the future when that sensor is sup
 Monitor output at 460800 baud for debugging information.
 
 ## Acknowledgement
-This project is developed under a Grant from the [Gram Disha Trust (GDT)](https://gramdisha.org).
-
+This project is developed under a Grant from the [Gram Disha Trust (GDT)](https://gramdisha.org).  
 Reference material, background discussions, and implementation notes are available on the [BLOG](https://gramdisha.org/iot-agritech-smallholders/).
 
 ## License
