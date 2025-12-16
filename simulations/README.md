@@ -244,7 +244,8 @@ The main Simulink model integrates all simulation components into a unified envi
 
 5. **Access simulation results**
    Double click on X-Y scope to view graphs
-  
+  <img width="551" height="734" alt="image" src="https://github.com/user-attachments/assets/63c927ce-022a-4df5-8692-6700239e737c" />
+
 
 ### Advanced Usage
 
