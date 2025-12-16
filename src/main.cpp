@@ -34,8 +34,6 @@ void setup() {
   // Deep - works but slow recovery and slow response to UX so do not use except for multi minute cycles.
   frugal_iot.configure_power(Power_Loop, 30000, 30000); // Take a reading every 30 seconds - awake all the time
   // frugal_iot.configure_power(Power_Deep, SYSTEM_POWER_CYCLE, SYSTEM_POWER_WAKE); // Wake for 30 seconds, sleep for 15 minutes cycle
-   frugal_iot.configure_power(Power_Loop, 30000, 30000); // Take a reading every 30 seconds - awake all the time
-  //frugal_iot.configure_power(Power_Deep, SYSTEM_POWER_CYCLE, SYSTEM_POWER_WAKE); // Wake for 30 seconds, sleep for 15 minutes cycle
   // system_oled and actuator_ledbuiltin added automatically on boards that have them.
 
   // Add local wifis here, or see instructions in the wiki for adding via the /data
